@@ -50,3 +50,38 @@ UPDATE us_household_income
 SET State_Name = 'Alabama'
 WHERE State_Name = 'alabama';
 ```
+5. Filled Missing Places
+Filled in missing values using contextual county and city information:
+```MySQL
+UPDATE us_household_income
+SET Place = 'Autaugaville'
+WHERE County = 'Autauga County'
+AND City = 'Vinemont';
+```
+6. Cleaned Type Values:
+Fixed misspellings and standardised entries:
+```MySQL
+UPDATE us_household_income
+SET Type = replace(Type, "CDP", "CPD")
+WHERE Type LIKE '%CDP%';
+
+# Correcting misspellings.
+UPDATE us_household_income
+SET Type = 'Borough'
+WHERE Type = 'Boroughs';
+```
+7. Validated Land/Water Data
+Checked for missing or zero values in ALand and WLand.
+```MySQL
+SELECT ALand, AWater
+FROM us_household_income
+WHERE (AWater = 0 OR AWater = '' OR AWater IS NULL)
+AND (ALand = 0 OR ALand = '' OR ALand IS NULL);
+```
+
+Results 
+* All duplicate records removed from us_household_income.
+* Fixed column name encoding issue in us_household_income_statistics.
+* Standardised categorical data.
+* Filled missing place where possible.
+* Ensured valid non-zero land and water area data.
