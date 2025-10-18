@@ -8,7 +8,7 @@ Both of these tables were loaded into an a SQL database for cleaning.
 
 ## Objectives:
 * Identify and remove duplicates.
-* Correcting incosistent or messy column names.
+* Correcting inconsistent or messy column names.
 * Standardise categorical data such as State_Name and Type.
 * Fill in missing values in key fields like Place
 * Ensure land and water area columns (ALand, AWater) contain valid data.
