@@ -16,10 +16,37 @@ Objectives:
 Tools Used:
 * DBMS: MySQL Workbench
 
-1. Initial Exploration
-``` MySQL
-SELECT * 
-FROM us_household_income;
-
-SELECT * 
-FROM us_household_income_statistics;
+1. Fixed Column Name Encoding Issue
+Renamed a messy column name caused by encoding artifacts:
+```MySQL
+ALTER TABLE us_household_income_statistics RENAME COLUMN `ï»¿id` TO `id`;
+```
+2. Checked for Duplicates
+Counted and located duplicate IDs:
+```MySQL
+SELECT id, COUNT(id)
+FROM us_household_income
+GROUP BY id 
+HAVING COUNT(id) > 1;
+```
+3. Removed Duplicates
+Deleted duplicate rows while retaining one record per ID:
+```MySQL
+DELETE FROM us_household_income
+WHERE row_id IN (
+	SELECT row_id
+	FROM (
+		SELECT row_id,
+		id,
+		ROW_NUMBER() OVER(PARTITION BY id ORDER BY id) AS row_num
+		FROM us_household_income) AS duplicates
+	WHERE row_num > 1 )
+;
+```
+4. Standardising State Names
+Corrected capitilisation inconsistencies:
+```MySQL
+UPDATE us_household_income
+SET State_Name = 'Alabama'
+WHERE State_Name = 'alabama';
+```
